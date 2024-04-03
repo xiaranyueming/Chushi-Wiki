@@ -33,10 +33,10 @@ public class Result {
     }
 
 
-    // 失败返回--自定义错误信息
-    public static Result failure(String message){
+    // 失败返回--自定义错误信息和错误码
+    public static Result failure(int code, String message){
         Result result = new Result();
-        result.setCode(500);
+        result.setCode(code);
         result.setMessage(message);
         return result;
     }

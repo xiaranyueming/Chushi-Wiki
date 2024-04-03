@@ -14,9 +14,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @ResponseBody
 public class GlobalException {
 
-    @ExceptionHandler(value = Exception.class)
-    private Result globalExceptionHandler(Exception e) {
-        return Result.failure(e.getMessage());
+    @ExceptionHandler(value = CustomException.class)
+    private Result globalExceptionHandler(CustomException e) {
+        return Result.failure(e.getCode(), e.getMessage());
     }
 
 }
