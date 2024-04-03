@@ -1,1 +1,7 @@
-spring.application.name=Chushi-Wiki
+spring:
+  application:
+    name: Chushi-Wiki
+  profiles:
+    active: dev
+server:
+  port: 8080
