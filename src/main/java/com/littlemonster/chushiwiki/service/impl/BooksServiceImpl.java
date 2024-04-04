@@ -2,6 +2,7 @@ package com.littlemonster.chushiwiki.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollectionUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.littlemonster.chushiwiki.common.ResponseCode;
 import com.littlemonster.chushiwiki.entity.domain.Books;
@@ -82,6 +83,57 @@ public class BooksServiceImpl extends ServiceImpl<BooksMapper, Books>
             // 执行更新操作
             return booksMapper.updateById(books) > 0;
         }
+    }
+
+
+
+
+    /**
+     * 删除书籍
+     * @param bookId 书籍ID
+     * @return 删除结果
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public boolean deleteBook(Long bookId) {
+        if (bookId == null) {
+            throw new CustomException(ResponseCode.NO_PARAM);
+        }
+
+        int deleteById = booksMapper.deleteById(bookId);
+        if (deleteById <= 0) {
+            throw new CustomException(500, "删除失败");
+        }
+
+        return true;
+    }
+
+
+
+    /**
+     * 搜索书籍
+     * @param keyWord 关键字
+     * @return 搜索结果
+     */
+    @Override
+    public List<BookVO> searchBook(String keyWord) {
+        LambdaQueryWrapper<Books> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.like(Books::getBookName, keyWord);
+        List<Books> booksList = booksMapper.selectList(queryWrapper);
+
+        // 如果查询结果为空，则返回一个空的List
+        if (CollectionUtil.isEmpty(booksList)) {
+            return new ArrayList<>();
+        }
+
+        List<BookVO> bookVOList = new ArrayList<>();
+        for (Books book : booksList) {
+            BookVO bookVO = BeanUtil.copyProperties(book, BookVO.class);
+
+            bookVOList.add(bookVO);
+        }
+
+        return bookVOList;
     }
 }
 

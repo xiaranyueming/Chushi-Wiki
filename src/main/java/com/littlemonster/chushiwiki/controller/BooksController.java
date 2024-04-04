@@ -1,5 +1,6 @@
 package com.littlemonster.chushiwiki.controller;
 
+import cn.hutool.core.collection.CollectionUtil;
 import com.littlemonster.chushiwiki.common.ResponseCode;
 import com.littlemonster.chushiwiki.entity.vo.BookVO;
 import com.littlemonster.chushiwiki.service.BooksService;
@@ -59,5 +60,45 @@ public class BooksController {
             return Result.failure(500, "保存失败");
         }
         return Result.success();
+    }
+
+
+
+    /**
+     * 删除书籍
+     * @param bookId 书籍ID
+     * @return 删除结果
+     */
+    @DeleteMapping("/delete/{id}")
+    @Operation(summary = "删除书籍")
+    public Result deleteBook(@PathVariable("id") Long bookId) {
+        if (bookId == null) {
+            return Result.failure(ResponseCode.NO_PARAM);
+        }
+
+        boolean deleted = booksService.deleteBook(bookId);
+        if (!deleted) {
+            return Result.failure(500, "删除失败");
+        }
+
+        return Result.success();
+    }
+
+
+
+    /**
+     * 搜索书籍
+     * @param keyWord 关键字
+     * @return 搜索结果
+     */
+    @GetMapping("/search")
+    @Operation(summary = "搜索书籍")
+    public Result searchBook(@RequestParam("keyWord") String keyWord) {
+        List<BookVO> bookList = booksService.searchBook(keyWord);
+        if (CollectionUtil.isEmpty(bookList)) {
+            return Result.failure(500, "未找到相关书籍");
+        }
+
+        return Result.success(bookList);
     }
 }

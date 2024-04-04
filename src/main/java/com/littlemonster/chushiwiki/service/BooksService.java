@@ -27,4 +27,20 @@ public interface BooksService extends IService<Books> {
      * @return 保存结果
      */
     boolean saveBook(BookVO bookVO);
+
+
+    /**
+     * 删除书籍
+     * @param bookId 书籍ID
+     * @return 删除结果
+     */
+    boolean deleteBook(Long bookId);
+
+
+    /**
+     * 更新书籍
+     * @param keyWord 关键字
+     * @return 搜索结果
+     */
+    List<BookVO> searchBook(String keyWord);
 }
