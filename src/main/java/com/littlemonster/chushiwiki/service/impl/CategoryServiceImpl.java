@@ -41,8 +41,9 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category>
      */
     @Override
     public List<CategoryVO> getCategoryList() {
-
-        List<Category> categoryList = categoryMapper.selectList(null);
+        LambdaQueryWrapper<Category> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.orderByAsc(Category::getSort);
+        List<Category> categoryList = categoryMapper.selectList(queryWrapper);
 
         // 如果查询结果为空，则返回一个空的List
         if (CollectionUtil.isEmpty(categoryList)) {
@@ -58,6 +59,8 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category>
 
         return categoryVOList;
     }
+
+
 
 
     /**

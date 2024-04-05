@@ -135,6 +135,38 @@ public class BooksServiceImpl extends ServiceImpl<BooksMapper, Books>
 
         return bookVOList;
     }
+
+
+
+    /**
+     * 获取书籍分类
+     * @param id 分类ID
+     * @return 书籍分类
+     */
+    @Override
+    public List<BookVO> getBooksByCategory(Integer id) {
+        if (id == null) {
+            throw new CustomException(ResponseCode.NO_PARAM);
+        }
+
+        LambdaQueryWrapper<Books> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(Books::getCategory2Id, id);
+        List<Books> booksList = booksMapper.selectList(queryWrapper);
+
+        // 如果查询结果为空，则返回一个空的List
+        if (CollectionUtil.isEmpty(booksList)) {
+            return new ArrayList<>();
+        }
+
+        List<BookVO> bookVOList = new ArrayList<>();
+        for (Books book : booksList) {
+            BookVO bookVO = BeanUtil.copyProperties(book, BookVO.class);
+
+            bookVOList.add(bookVO);
+        }
+
+        return bookVOList;
+    }
 }
 
 

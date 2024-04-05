@@ -101,4 +101,26 @@ public class BooksController {
 
         return Result.success(bookList);
     }
+
+
+
+    /**
+     * 根据分类获取书籍
+     * @param id 分类ID
+     * @return 书籍列表
+     */
+    @GetMapping("/category/{id}")
+    @Operation(summary = "根据分类获取书籍")
+    public Result getBooksByCategory(@PathVariable("id") Integer id) {
+        if (id == null) {
+            return Result.failure(ResponseCode.NO_PARAM);
+        }
+
+        List<BookVO> bookList = booksService.getBooksByCategory(id);
+        if (CollectionUtil.isEmpty(bookList)) {
+            return Result.failure(500, "未找到相关书籍");
+        }
+
+        return Result.success(bookList);
+    }
 }

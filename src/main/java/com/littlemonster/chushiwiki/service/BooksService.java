@@ -43,4 +43,11 @@ public interface BooksService extends IService<Books> {
      * @return 搜索结果
      */
     List<BookVO> searchBook(String keyWord);
+
+
+    /**
+     * 获取书籍分类
+     * @return 书籍分类
+     */
+    List<BookVO> getBooksByCategory(Integer id);
 }
