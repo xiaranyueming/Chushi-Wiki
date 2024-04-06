@@ -73,6 +73,9 @@ public class DocServiceImpl extends ServiceImpl<DocMapper, Doc>
         if (docVO == null) {
             throw new CustomException(ResponseCode.NO_PARAM);
         }
+        if (docVO.getBookId() == null) {
+            throw new CustomException(400, "请选择所属书籍");
+        }
 
         Doc doc = BeanUtil.copyProperties(docVO, Doc.class);
         if (doc.getId() == null) {
@@ -93,17 +96,17 @@ public class DocServiceImpl extends ServiceImpl<DocMapper, Doc>
 
     /**
      * 删除文档
-     * @param docId 文档ID
+     * @param idList 文档ID
      * @return 删除结果
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public boolean deleteDoc(Long docId) {
-        if (docId == null) {
+    public boolean deleteDoc(List<String> idList) {
+        if (CollectionUtil.isEmpty(idList)) {
             throw new CustomException(ResponseCode.NO_PARAM);
         }
 
-        int deleteById = docMapper.deleteById(docId);
+        int deleteById = docMapper.deleteBatchIds(idList);
         if (deleteById <= 0) {
             throw new CustomException(500, "删除失败");
         }

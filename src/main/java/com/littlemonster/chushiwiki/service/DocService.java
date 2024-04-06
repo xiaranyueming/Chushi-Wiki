@@ -31,10 +31,10 @@ public interface DocService extends IService<Doc> {
 
     /**
      * 删除文档
-     * @param docId 文档id
+     * @param idList 文档id
      * @return 删除结果
      */
-    boolean deleteDoc(Long docId);
+    boolean deleteDoc(List<String> idList);
 
 
     /**

@@ -66,17 +66,19 @@ public class DocController {
 
     /**
      * 删除文档
-     * @param docId 文档ID
+     * @param ids 文档ID
      * @return 删除结果
      */
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/delete/{ids}")
     @Operation(summary = "删除文档")
-    public Result deleteDoc(@PathVariable("id") Long docId) {
-        if (docId == null) {
+    public Result deleteDoc(@PathVariable("ids") String ids) {
+        if (ids == null) {
             return Result.failure(ResponseCode.NO_PARAM);
         }
 
-        boolean deleted = docService.deleteDoc(docId);
+        List<String> idList = List.of(ids.split(","));
+
+        boolean deleted = docService.deleteDoc(idList);
         if (!deleted) {
             return Result.failure(500, "删除失败");
         }
