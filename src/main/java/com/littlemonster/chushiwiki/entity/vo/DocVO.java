@@ -43,6 +43,12 @@ public class DocVO {
     private Integer sort;
 
     /**
+     * 内容
+     */
+    @Schema(description = "内容")
+    private String content;
+
+    /**
      * 浏览量
      */
     @Schema(description = "浏览量")

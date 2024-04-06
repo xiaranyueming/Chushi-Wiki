@@ -5,11 +5,14 @@ import cn.hutool.core.collection.CollectionUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.littlemonster.chushiwiki.common.ResponseCode;
+import com.littlemonster.chushiwiki.entity.domain.Content;
 import com.littlemonster.chushiwiki.entity.domain.Doc;
 import com.littlemonster.chushiwiki.entity.vo.DocVO;
 import com.littlemonster.chushiwiki.exception.CustomException;
+import com.littlemonster.chushiwiki.mapper.ContentMapper;
 import com.littlemonster.chushiwiki.mapper.DocMapper;
 import com.littlemonster.chushiwiki.service.DocService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,13 +26,16 @@ import java.util.Optional;
 * @createDate 2024-04-05 10:07:15
 */
 @Service
+@Slf4j
 public class DocServiceImpl extends ServiceImpl<DocMapper, Doc>
     implements DocService{
 
     private final DocMapper docMapper;
+    private final ContentMapper contentMapper;
 
-    public DocServiceImpl(DocMapper docMapper) {
+    public DocServiceImpl(DocMapper docMapper, ContentMapper contentMapper) {
         this.docMapper = docMapper;
+        this.contentMapper = contentMapper;
     }
 
 
@@ -78,16 +84,33 @@ public class DocServiceImpl extends ServiceImpl<DocMapper, Doc>
         }
 
         Doc doc = BeanUtil.copyProperties(docVO, Doc.class);
-        if (doc.getId() == null) {
-            // id为空，执行插入操作
-            return docMapper.insert(doc) > 0;
-        } else {
-            // id不为空，先查询是否存在该记录
-            Doc selectById = docMapper.selectById(doc.getId());
-            Optional.ofNullable(selectById)
-                    .orElseThrow(() -> new CustomException(500, "该文档不存在"));
-            // 执行更新操作
-            return docMapper.updateById(doc) > 0;
+        Content content = BeanUtil.copyProperties(docVO, Content.class);
+
+        try {
+            if (doc.getId() == null) {
+                // id为空，执行插入操作
+                int inserted = docMapper.insert(doc);
+                content.setId(doc.getId());
+                int i = contentMapper.insert(content);
+
+                return  inserted > 0 && i > 0;
+            } else {
+                // id不为空，先查询是否存在该记录
+                Doc selectById = docMapper.selectById(doc.getId());
+                Optional.ofNullable(selectById)
+                        .orElseThrow(() -> new CustomException(500, "该文档不存在"));
+                // 执行更新操作
+                int updated = docMapper.updateById(doc);
+                int i = contentMapper.updateById(content);
+                if (i == 0) {
+                    content.setId(doc.getId());
+                    i = contentMapper.insert(content);
+                }
+
+                return updated > 0 && i > 0;
+            }
+        } catch (Exception e) {
+            throw new CustomException(ResponseCode.SYSTEM_ERROR);
         }
     }
 
