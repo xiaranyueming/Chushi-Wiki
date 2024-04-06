@@ -7,7 +7,6 @@ import com.littlemonster.chushiwiki.service.UserService;
 import com.littlemonster.chushiwiki.utils.Result;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -39,7 +38,7 @@ public class UserController {
      */
     @PostMapping("/login")
     @Operation(summary = "登录")
-    public Result login(@RequestBody LoginDTO loginDTO, HttpServletRequest request) {
+    public Result login(@RequestBody LoginDTO loginDTO) {
         if (loginDTO == null) {
             return Result.failure(ResponseCode.NO_PARAM);
         }
@@ -47,7 +46,7 @@ public class UserController {
             return Result.failure(ResponseCode.PASSWORD_RULE_ERROR);
         }
 
-        UserVO userVO = userService.login(loginDTO, request);
+        UserVO userVO = userService.login(loginDTO);
         if (userVO == null) {
             return Result.failure(ResponseCode.LOGIN_ERROR);
         }
@@ -81,4 +80,5 @@ public class UserController {
 
         return Result.success();
     }
+
 }

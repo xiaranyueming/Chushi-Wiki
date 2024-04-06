@@ -11,7 +11,8 @@ public enum ResponseCode {
 
     SYSTEM_ERROR(500, "系统错误"),
     NO_PARAM(400, "参数为空"),
-    LOGIN_ERROR(401, "用户名或密码错误"),
+    NO_LOGIN(401, "未登录"),
+    LOGIN_ERROR(406, "用户名或密码错误"),
     NO_USER(402, "该用户不存在"),
     ERROR_PARAM(403, "参数错误"),
     HAS_USER(405, "该用户已存在"),

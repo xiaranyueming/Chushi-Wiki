@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.littlemonster.chushiwiki.entity.domain.User;
 import com.littlemonster.chushiwiki.entity.dto.LoginDTO;
 import com.littlemonster.chushiwiki.entity.vo.UserVO;
-import jakarta.servlet.http.HttpServletRequest;
 
 /**
 * @author white-zhou
@@ -16,12 +15,10 @@ public interface UserService extends IService<User> {
 
     /**
      * 登录
-     *
      * @param loginDTO 登录信息
-     * @param request request
      * @return 登录结果
      */
-    UserVO login(LoginDTO loginDTO, HttpServletRequest request);
+    UserVO login(LoginDTO loginDTO);
 
 
 
@@ -31,4 +28,5 @@ public interface UserService extends IService<User> {
      * @return 注册结果
      */
     boolean register(LoginDTO loginDTO);
+
 }

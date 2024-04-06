@@ -11,8 +11,6 @@ import com.littlemonster.chushiwiki.exception.CustomException;
 import com.littlemonster.chushiwiki.mapper.UserMapper;
 import com.littlemonster.chushiwiki.service.UserService;
 import com.littlemonster.chushiwiki.utils.CommonUtils;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,11 +34,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
      * 登录
      *
      * @param loginDTO 登录信息
-     * @param request
      * @return 登录结果
      */
     @Override
-    public UserVO login(LoginDTO loginDTO, HttpServletRequest request) {
+    public UserVO login(LoginDTO loginDTO) {
         if (loginDTO == null) {
             throw new CustomException(ResponseCode.NO_PARAM);
         }
@@ -63,11 +60,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
 
         // 生成token
         String token = CommonUtils.createToken(user);
-
-        // 登录成功，将用户信息存入session
-        HttpSession session = request.getSession();
-        session.setAttribute("user", user);
-        session.setAttribute("token", token);
+        if (userVO != null) {
+            userVO.setToken(token);
+        }
 
         return userVO;
     }
@@ -102,6 +97,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
 
         return inserted > 0;
     }
+
 }
 
 
