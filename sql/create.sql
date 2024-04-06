@@ -57,3 +57,18 @@ create table `content`(
     `update_time` datetime default current_timestamp on update current_timestamp comment '更新时间',
     `is_delete` int default 0 not null comment '是否删除 0-未删除 1-已删除'
 ) engine=InnoDB default charset=utf8mb4 comment '文档内容表';
+
+
+# 用户表
+drop table if exists `user`;
+create table `user`(
+    `id` int not null auto_increment primary key comment '用户id',
+    `user_name` varchar(255) not null comment '用户名',
+    `password` varchar(255) not null comment '密码',
+    `create_time` datetime default current_timestamp comment '创建时间',
+    `update_time` datetime default current_timestamp on update current_timestamp comment '更新时间',
+    `is_delete` int default 0 not null comment '是否删除 0-未删除 1-已删除',
+    unique key `unique_user_name`(`user_name`)
+) engine=InnoDB default charset=utf8mb4 comment '用户表';
+
+
