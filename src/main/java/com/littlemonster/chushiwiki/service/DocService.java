@@ -43,4 +43,12 @@ public interface DocService extends IService<Doc> {
      * @return 文档列表
      */
     List<DocVO> searchDoc(String keyWord);
+
+
+    /**
+     * 获取文档详情
+     * @param bookId 书籍id
+     * @return 文档列表
+     */
+    List<DocVO> getDocByBookId(Integer bookId);
 }

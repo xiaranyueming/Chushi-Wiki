@@ -103,4 +103,21 @@ public class DocController {
 
         return Result.success(docList);
     }
+
+
+    /**
+     * 根据书籍ID获取文档
+     * @param bookId 书籍ID
+     * @return 文档列表
+     */
+    @GetMapping("/{bookId}")
+    public Result getDocByBookId(@PathVariable("bookId") Integer bookId) {
+        if (bookId == null) {
+            return Result.failure(ResponseCode.NO_PARAM);
+        }
+
+        List<DocVO> docList = docService.getDocByBookId(bookId);
+
+        return Result.success(docList);
+    }
 }

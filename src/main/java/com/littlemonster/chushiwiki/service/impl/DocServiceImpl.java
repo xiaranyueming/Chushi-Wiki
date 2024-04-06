@@ -164,6 +164,37 @@ public class DocServiceImpl extends ServiceImpl<DocMapper, Doc>
 
         return docVOList;
     }
+
+
+
+    /**
+     * 获取文档详情
+     * @param bookId 书籍id
+     * @return 文档列表
+     */
+    @Override
+    public List<DocVO> getDocByBookId(Integer bookId) {
+        if (bookId == null) {
+            throw new CustomException(ResponseCode.NO_PARAM);
+        }
+
+        LambdaQueryWrapper<Doc> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(Doc::getBookId, bookId);
+        List<Doc> docList = docMapper.selectList(queryWrapper);
+        // 如果查询结果为空，则返回一个空的List
+        if (CollectionUtil.isEmpty(docList)) {
+            return new ArrayList<>();
+        }
+
+        List<DocVO> docVOList = new ArrayList<>();
+        for (Doc doc : docList) {
+            DocVO docVO = BeanUtil.copyProperties(doc, DocVO.class);
+
+            docVOList.add(docVO);
+        }
+
+        return docVOList;
+    }
 }
 
 
