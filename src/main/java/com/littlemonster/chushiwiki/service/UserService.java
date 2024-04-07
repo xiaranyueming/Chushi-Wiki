@@ -3,6 +3,7 @@ package com.littlemonster.chushiwiki.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.littlemonster.chushiwiki.entity.domain.User;
 import com.littlemonster.chushiwiki.entity.dto.LoginDTO;
+import com.littlemonster.chushiwiki.entity.dto.resetPasswordDTO;
 import com.littlemonster.chushiwiki.entity.vo.UserVO;
 
 /**
@@ -29,4 +30,12 @@ public interface UserService extends IService<User> {
      */
     boolean register(LoginDTO loginDTO);
 
+
+
+    /**
+     * 重置密码
+     * @param resetPasswordDTO 重置密码信息
+     * @return 重置密码结果
+     */
+    boolean resetPassword(resetPasswordDTO resetPasswordDTO);
 }

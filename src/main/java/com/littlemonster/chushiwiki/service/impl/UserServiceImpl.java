@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.littlemonster.chushiwiki.common.ResponseCode;
 import com.littlemonster.chushiwiki.entity.domain.User;
 import com.littlemonster.chushiwiki.entity.dto.LoginDTO;
+import com.littlemonster.chushiwiki.entity.dto.resetPasswordDTO;
 import com.littlemonster.chushiwiki.entity.vo.UserVO;
 import com.littlemonster.chushiwiki.exception.CustomException;
 import com.littlemonster.chushiwiki.mapper.UserMapper;
@@ -96,6 +97,49 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         int inserted = userMapper.insert(insterUser);
 
         return inserted > 0;
+    }
+
+
+
+
+    /**
+     * 重置密码
+     * @param resetPasswordDTO 重置密码信息
+     * @return 重置密码结果
+     */
+    @Override
+    public boolean resetPassword(resetPasswordDTO resetPasswordDTO) {
+        if (resetPasswordDTO == null) {
+            throw new CustomException(ResponseCode.NO_PARAM);
+        }
+        if (resetPasswordDTO.getOldPassword().length() < 4 || resetPasswordDTO.getOldPassword().length() > 32) {
+            throw new CustomException(ResponseCode.NO_PARAM);
+        }
+        if (resetPasswordDTO.getNewPassword().length() < 4 || resetPasswordDTO.getNewPassword().length() > 32) {
+            throw new CustomException(ResponseCode.NO_PARAM);
+        }
+        if (resetPasswordDTO.getConfirmPassword().length() < 4 || resetPasswordDTO.getConfirmPassword().length() > 32) {
+            throw new CustomException(ResponseCode.NO_PARAM);
+        }
+        if (!resetPasswordDTO.getNewPassword().equals(resetPasswordDTO.getConfirmPassword())) {
+            throw new CustomException(ResponseCode.NO_PARAM);
+        }
+
+        LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(User::getUserName, resetPasswordDTO.getUserName());
+        User user = userMapper.selectOne(queryWrapper);
+        if (user == null) {
+            throw new CustomException(ResponseCode.NO_USER);
+        }
+        if (!CommonUtils.md5(resetPasswordDTO.getOldPassword()).equals(user.getPassword())) {
+            throw new CustomException(400, "旧密码错误");
+        }
+
+
+        user.setPassword(CommonUtils.md5(resetPasswordDTO.getNewPassword()));
+        int updated = userMapper.updateById(user);
+
+        return updated > 0;
     }
 
 }

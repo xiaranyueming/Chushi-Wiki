@@ -38,6 +38,7 @@ public class LoginInterceptor implements HandlerInterceptor {
             response.setStatus(401);
             return false;
         }
+        log.info("map:{}", map);
 
         return true;
     }
