@@ -11,6 +11,12 @@ import com.littlemonster.chushiwiki.entity.domain.Books;
 */
 public interface BooksMapper extends BaseMapper<Books> {
 
+
+    /**
+     * 更新书籍的浏览量，点赞量，文档数量
+     * @return 更新结果
+     */
+    boolean updateBookInfo();
 }
 
 

@@ -25,4 +25,13 @@
         doc_count,view_count,vote_count,
         create_time,update_time,is_delete
     </sql>
+    <update id="updateBookInfo">
+        update books b,
+            (select book_id, count(1) as doc_count, sum(view_count) as view_count,
+                    sum(vote_count) as vote_count from doc group by book_id) d
+        set b.doc_count = d.doc_count,
+            b.view_count = d.view_count,
+            b.vote_count = d.vote_count
+        where b.id = d.book_id
+    </update>
 </mapper>

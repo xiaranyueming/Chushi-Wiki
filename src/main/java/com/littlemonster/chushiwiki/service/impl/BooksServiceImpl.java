@@ -167,6 +167,20 @@ public class BooksServiceImpl extends ServiceImpl<BooksMapper, Books>
 
         return bookVOList;
     }
+
+
+
+    /**
+     * 修改书籍的浏览量，点赞量，文档数量
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void updateBookInfo() {
+        boolean b = booksMapper.updateBookInfo();
+        if (!b) {
+            throw new CustomException(500, "更新书籍信息失败");
+        }
+    }
 }
 
 

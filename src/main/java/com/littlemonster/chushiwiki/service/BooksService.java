@@ -50,4 +50,10 @@ public interface BooksService extends IService<Books> {
      * @return 书籍分类
      */
     List<BookVO> getBooksByCategory(Integer id);
+
+
+    /**
+     * 修改书籍的浏览量，点赞量，文档数量
+     */
+    void updateBookInfo();
 }
