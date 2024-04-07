@@ -8,10 +8,10 @@ import com.littlemonster.chushiwiki.entity.domain.Content;
 import com.littlemonster.chushiwiki.entity.vo.ContentVO;
 import com.littlemonster.chushiwiki.exception.CustomException;
 import com.littlemonster.chushiwiki.mapper.ContentMapper;
+import com.littlemonster.chushiwiki.mapper.DocMapper;
 import com.littlemonster.chushiwiki.service.ContentService;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
 * @author white-zhou
@@ -24,8 +24,11 @@ public class ContentServiceImpl extends ServiceImpl<ContentMapper, Content>
 
     private final ContentMapper contentMapper;
 
-    public ContentServiceImpl(ContentMapper contentMapper) {
+    private final DocMapper docMapper;
+
+    public ContentServiceImpl(ContentMapper contentMapper, DocMapper docMapper) {
         this.contentMapper = contentMapper;
+        this.docMapper = docMapper;
     }
 
 
@@ -37,6 +40,7 @@ public class ContentServiceImpl extends ServiceImpl<ContentMapper, Content>
      * @return 文档内容
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public ContentVO getContentDetail(Integer id) {
         if (id == null) {
             throw new CustomException(ResponseCode.NO_PARAM);
@@ -46,8 +50,14 @@ public class ContentServiceImpl extends ServiceImpl<ContentMapper, Content>
         queryWrapper.eq(Content::getId, id)
                 .select(Content::getContent);
         Content content = contentMapper.selectOne(queryWrapper);
-        Optional.ofNullable(content)
-                .orElseThrow(() -> new CustomException(500, "该文档内容不存在"));
+        if (content == null) {
+            throw new CustomException(500, "文档内容不存在");
+        }
+
+        boolean viewed = docMapper.viewDoc(id);
+        if (!viewed) {
+            throw new CustomException(500, "文档浏览次数更新失败");
+        }
 
         return BeanUtil.copyProperties(content, ContentVO.class);
     }

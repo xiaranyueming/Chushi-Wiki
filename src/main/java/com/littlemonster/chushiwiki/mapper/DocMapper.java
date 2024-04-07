@@ -11,6 +11,20 @@ import com.littlemonster.chushiwiki.entity.domain.Doc;
 */
 public interface DocMapper extends BaseMapper<Doc> {
 
+    /**
+     * 点赞文档
+     * @param docId 文档id
+     * @return 点赞结果
+     */
+    boolean voteDoc(Integer docId);
+
+
+    /**
+     * 浏览文档
+     * @param id 文档id
+     * @return 浏览结果
+     */
+    boolean viewDoc(Integer id);
 }
 
 

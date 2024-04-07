@@ -23,4 +23,14 @@
         vote_count,create_time,update_time,
         is_delete
     </sql>
+    <update id="voteDoc">
+        update doc
+        set vote_count = vote_count + 1
+        where id = #{docId}
+    </update>
+    <update id="viewDoc">
+        update doc
+        set view_count = view_count + 1
+        where id = #{id}
+    </update>
 </mapper>

@@ -51,4 +51,13 @@ public interface DocService extends IService<Doc> {
      * @return 文档列表
      */
     List<DocVO> getDocByBookId(Integer bookId);
+
+
+
+    /**
+     * 点赞文档
+     * @param docId 文档id
+     * @return 点赞结果
+     */
+    boolean voteDoc(Integer docId);
 }

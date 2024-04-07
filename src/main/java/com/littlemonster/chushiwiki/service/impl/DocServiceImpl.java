@@ -195,6 +195,28 @@ public class DocServiceImpl extends ServiceImpl<DocMapper, Doc>
 
         return docVOList;
     }
+
+
+
+    /**
+     * 点赞文档
+     * @param docId 文档id
+     * @return 点赞结果
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public boolean voteDoc(Integer docId) {
+        if (docId == null) {
+            throw new CustomException(ResponseCode.NO_PARAM);
+        }
+
+        boolean voted = docMapper.voteDoc(docId);
+        if (!voted) {
+            throw new CustomException(500, "点赞失败");
+        }
+
+        return true;
+    }
 }
 
 

@@ -108,6 +108,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
      * @return 重置密码结果
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public boolean resetPassword(resetPasswordDTO resetPasswordDTO) {
         if (resetPasswordDTO == null) {
             throw new CustomException(ResponseCode.NO_PARAM);

@@ -120,4 +120,26 @@ public class DocController {
 
         return Result.success(docList);
     }
+
+
+
+    /**
+     * 点赞文档
+     * @param docId 文档ID
+     * @return 点赞结果
+     */
+    @GetMapping("/vote/{docId}")
+    @Operation(summary = "点赞文档")
+    public Result voteDoc(@PathVariable("docId") Integer docId) {
+        if (docId == null) {
+            return Result.failure(ResponseCode.NO_PARAM);
+        }
+
+        boolean voted = docService.voteDoc(docId);
+        if (!voted) {
+            return Result.failure(500, "点赞失败");
+        }
+
+        return Result.success();
+    }
 }
